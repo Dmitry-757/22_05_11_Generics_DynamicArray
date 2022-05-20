@@ -27,15 +27,22 @@ public class Main {
         myArrayList.show();
         myArrayList.reverse();
         myArrayList.show();
-        System.out.println("popFront");
-        myArrayList.popFront();
+//        System.out.println("popFront");
+//        myArrayList.popFront();
+//        myArrayList.show();
+//
+//        System.out.println();
+//        System.out.println("popBack");
+//        myArrayList.popBack();
+//        myArrayList.show();
+
+        System.out.println("shuffle");
+        myArrayList.shuffle();
         myArrayList.show();
 
-        System.out.println();
-        System.out.println("popBack");
-        myArrayList.popBack();
+        System.out.println("shuffle");
+        myArrayList.shuffle();
         myArrayList.show();
-
 
 
     }

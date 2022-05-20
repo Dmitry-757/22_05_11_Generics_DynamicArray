@@ -5,6 +5,7 @@ import com.sun.source.tree.BreakTree;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.OptionalInt;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -362,6 +363,14 @@ public class MyArrayList<T> {
 
 
     public void shuffle(){
+        Random rand = new Random();
+
+        for (int i = 0; i <= pointerOnLastElement; i++) {
+            int randomIndexToSwap = rand.nextInt(pointerOnLastElement);
+            Object temp = dataArray[randomIndexToSwap];
+            dataArray[randomIndexToSwap] = dataArray[i];
+            dataArray[i] = temp;
+        }
 
     }
 
