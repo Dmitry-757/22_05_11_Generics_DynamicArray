@@ -24,9 +24,16 @@ public class Main {
         myArrayList.pushBack(3);
         myArrayList.pushBack(4);
 
+        System.out.println("reverse");
         myArrayList.show();
         myArrayList.reverse();
         myArrayList.show();
+
+        System.out.println("reverse by stream");
+        //myArrayList.show();
+        myArrayList.reverseByStream();
+        myArrayList.show();
+
 //        System.out.println("popFront");
 //        myArrayList.popFront();
 //        myArrayList.show();

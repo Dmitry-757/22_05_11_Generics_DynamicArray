@@ -1,12 +1,11 @@
 package org.dng;
 
-import com.sun.source.tree.BreakTree;
 
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.OptionalInt;
 import java.util.Random;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -143,10 +142,10 @@ public class MyArrayList<T> {
 //            dataArray[pointerOnLastElement + 1] = item;
 //
 //        pointerOnLastElement++;
-        if ((pointerOnLastElement == 0 )&&(dataArray[0]==null))
+        if ((pointerOnLastElement == 0) && (dataArray[0] == null))
             insert(item, 0);
         else
-            insert(item, pointerOnLastElement+1);
+            insert(item, pointerOnLastElement + 1);
 //            dataArray[pointerOnLastElement + 1] = item;
 
     }
@@ -171,11 +170,10 @@ public class MyArrayList<T> {
         boolean success = false;
         ensureCapacity(pointerOnLastElement + 1 + 1);//current size = pointerOnLastElement+1 and need one place for new item
         if (idx == 0) {
-            if(dataArray[0]==null){
+            if (dataArray[0] == null) {
                 dataArray[0] = item;
                 success = true;
-            }
-            else {
+            } else {
                 System.arraycopy(dataArray, 0, dataArray, 1, pointerOnLastElement + 1);
                 dataArray[0] = item;
                 pointerOnLastElement++;
@@ -186,7 +184,7 @@ public class MyArrayList<T> {
             dataArray[idx] = item;
             pointerOnLastElement++;
             success = true;
-        } else if (idx == pointerOnLastElement+1) {
+        } else if (idx == pointerOnLastElement + 1) {
             dataArray[idx] = item;
             pointerOnLastElement++;
             success = true;
@@ -330,11 +328,11 @@ public class MyArrayList<T> {
 
     public int indexOfItem(T item) {
         OptionalInt result = OptionalInt.of(-1);
-            result =
-                    IntStream
-                            .range(0, dataArray.length)
-                            .filter(i -> dataArray[i].equals(item))
-                            .findFirst();
+        result =
+                IntStream
+                        .range(0, dataArray.length)
+                        .filter(i -> dataArray[i].equals(item))
+                        .findFirst();
         return result.orElse(-1);
     }
 
@@ -344,25 +342,25 @@ public class MyArrayList<T> {
     /**
      * revers array
      */
-    public void reverse(){
+    public void reverse() {
 //        for (int i = 0; i <= ((pointerOnLastElement+1)/2); i++) {
         Object tmpItem;
-        for (int i = 0; i < (pointerOnLastElement/2); i++) {
+        for (int i = 0; i < (pointerOnLastElement / 2); i++) {
             tmpItem = dataArray[i];
-            dataArray[i] = dataArray[pointerOnLastElement-i];
-            dataArray[pointerOnLastElement-i] = tmpItem;
+            dataArray[i] = dataArray[pointerOnLastElement - i];
+            dataArray[pointerOnLastElement - i] = tmpItem;
         }
     }
 
     /**
      * revers array using stream
      */
-    public void reverseByStream(){
+    public void reverseByStream() {
         Collections.reverse(Arrays.asList(dataArray));
     }
 
 
-    public void shuffle(){
+    public void shuffle() {
         Random rand = new Random();
 
         for (int i = 0; i <= pointerOnLastElement; i++) {
@@ -374,7 +372,64 @@ public class MyArrayList<T> {
 
     }
 
-    public void set(int idx, T item) {
+    /**
+     * compares this object and "o"
+     *
+     * @param o - instance of MyArrayList
+     * @return boolean depending on equal this object and "o"
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MyArrayList)) return false;
+        MyArrayList<?> that = (MyArrayList<?>) o;
+        return INIT_SIZE == that.INIT_SIZE &&
+                pointerOnLastElement == that.pointerOnLastElement &&
+                capacity == that.capacity &&
+                Arrays.equals(dataArray, that.dataArray);
+    }
+
+    /**
+     * search item at index idx in array, serialize them, deserialize to new object
+     * @param idx
+     * @return return copy of element of array with index idx or null if idx out of bounds
+     */
+    public T getElementAt(int idx) throws IOException, ClassNotFoundException {
+
+        if ((0 <= idx) && (idx <= pointerOnLastElement)) {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutputStream oos;
+            //serialize
+            oos = new ObjectOutputStream(bos);
+            oos.writeObject(dataArray[idx]);
+            oos.close();
+
+            //deserialize
+            ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            T clone = (T)ois.readObject();
+            return clone;
+
+        } else
+            return null;
+    }
+
+
+
+    protected Object clone()  {
+        MyArrayList clone = new MyArrayList(this.capacity);
+        for (int i = 0; i < pointerOnLastElement; i++) {
+            clone.pushBack(dataArray[i]);
+        }
+        return clone;
+    }
+
+    /**
+     * set element with index idx value as item
+     * @param idx - index of element
+     * @param item - item is putting to array
+     */
+    public void setAt(int idx, T item) {
         if ((0 < idx) && (idx <= pointerOnLastElement)) {
             dataArray[idx] = item;
         }
@@ -383,14 +438,18 @@ public class MyArrayList<T> {
 
     public void show() {
         System.out.println("*********");
+        System.out.println("array contains objects:");
+        System.out.println("[ ");
         for (Object i : dataArray) {
-            System.out.println(i);
+            System.out.print(i+" ");
         }
+        System.out.println("]");
         System.out.println("*********");
     }
 
-    //we will send a copy of the array outside, not the arrey itself - in order not to violate the principle of Encapsulation and "Open Closed Principle"  ))
-    public Object[] getArr() {
+    //we will send a copy of the array outside, not the array itself -
+    // in order not to violate the principle of Encapsulation and "Open Closed Principle"  ))
+    public Object[] getDataArrayArray() {
         Object[] newArray = new Object[dataArray.length];
         System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
         return newArray;
@@ -398,10 +457,6 @@ public class MyArrayList<T> {
 
     public int getArrLenght() {
         return dataArray.length;
-    }
-
-    public T getItem(int idx) {
-        return (T) dataArray[idx];
     }
 
 
