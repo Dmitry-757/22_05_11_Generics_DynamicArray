@@ -1,6 +1,11 @@
 package org.dng;
 
+import com.sun.source.tree.BreakTree;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.OptionalInt;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -130,9 +135,19 @@ public class MyArrayList<T> {
      * @param item - item for adding
      */
     public void pushBack(T item) {
-        ensureCapacity(pointerOnLastElement + 1 + 1);//current size = pointerOnLastElement+1 and need one place for new item
-        dataArray[pointerOnLastElement + 1] = item;
-        pointerOnLastElement++;
+//        ensureCapacity(pointerOnLastElement + 1 + 1);//current size = pointerOnLastElement+1 and need one place for new item
+//        if (pointerOnLastElement == 0 )
+//            dataArray[pointerOnLastElement + 1] = item;
+//        else
+//            dataArray[pointerOnLastElement + 1] = item;
+//
+//        pointerOnLastElement++;
+        if ((pointerOnLastElement == 0 )&&(dataArray[0]==null))
+            insert(item, 0);
+        else
+            insert(item, pointerOnLastElement+1);
+//            dataArray[pointerOnLastElement + 1] = item;
+
     }
 
     /**
@@ -155,12 +170,22 @@ public class MyArrayList<T> {
         boolean success = false;
         ensureCapacity(pointerOnLastElement + 1 + 1);//current size = pointerOnLastElement+1 and need one place for new item
         if (idx == 0) {
-            System.arraycopy(dataArray, 0, dataArray, 1, pointerOnLastElement + 1);
-            dataArray[0] = item;
-            pointerOnLastElement++;
-            success = true;
+            if(dataArray[0]==null){
+                dataArray[0] = item;
+                success = true;
+            }
+            else {
+                System.arraycopy(dataArray, 0, dataArray, 1, pointerOnLastElement + 1);
+                dataArray[0] = item;
+                pointerOnLastElement++;
+                success = true;
+            }
         } else if (idx <= pointerOnLastElement) {
             System.arraycopy(dataArray, idx + 1, dataArray, idx + 1, pointerOnLastElement + 1 - idx);
+            dataArray[idx] = item;
+            pointerOnLastElement++;
+            success = true;
+        } else if (idx == pointerOnLastElement+1) {
             dataArray[idx] = item;
             pointerOnLastElement++;
             success = true;
@@ -170,16 +195,15 @@ public class MyArrayList<T> {
 
     /**
      * remove item from start of array
-     *
-     * @param item - item for adding
      */
-    public boolean popFront(T item) {
+    public boolean popFront() {
         return removeAt(0);
     }
 
-    public boolean popBack(){
+    public boolean popBack() {
         return removeAt(pointerOnLastElement);
     }
+
     /**
      * remove element at position idx (first position has index 0 )
      *
@@ -188,9 +212,9 @@ public class MyArrayList<T> {
     public boolean removeAt(int idx) {
         boolean success = false;
 
-        if ( (idx == 0) && (dataArray[0] != null) ) {
+        if ((idx == 0) && (dataArray[0] != null)) {//remove first element
             System.arraycopy(dataArray, 1, dataArray, 0, pointerOnLastElement);
-            dataArray[pointerOnLastElement] = 0;
+            dataArray[pointerOnLastElement] = null;
             pointerOnLastElement--;
             success = true;
         } else if (idx == pointerOnLastElement) {
@@ -203,13 +227,13 @@ public class MyArrayList<T> {
             success = true;
         }
 
-        if (CONDITION4CUT < (dataArray.length - pointerOnLastElement)) {
-            Object[] newArray = new Object[dataArray.length - 1];
-            newArray = new Object[pointerOnLastElement];
-            System.arraycopy(dataArray, 0, newArray, 0, pointerOnLastElement);
-            dataArray = newArray;
-            newArray = null;//???? does this operator needs for releasing of memory?
-        }
+//        if (CONDITION4CUT < (dataArray.length - pointerOnLastElement)) {
+//            Object[] newArray = new Object[dataArray.length - 1];
+//            newArray = new Object[pointerOnLastElement];
+//            System.arraycopy(dataArray, 0, newArray, 0, pointerOnLastElement);
+//            dataArray = newArray;
+//            newArray = null;//???? does this operator needs for releasing of memory?
+//        }
         return success;
     }
 
@@ -221,12 +245,10 @@ public class MyArrayList<T> {
      */
     public boolean remove(T item) {
         boolean success = false;
-        for (int i = 0; i < pointerOnLastElement; i++) {
-            if (dataArray[i].equals(item)) {
-                removeAt(i);
-                success = true;
-                break;
-            }
+        int idx = indexOf(item);
+        if (idx != -1) {
+            removeAt(idx);
+            success = true;
         }
         return success;
     }
@@ -248,11 +270,99 @@ public class MyArrayList<T> {
         return success;
     }
 
-    public void clear(){
-//        dataArray = new Object[0];
-//        capacity = 0;
+
+    public void clear() {
         dataArray = new Object[capacity];
         pointerOnLastElement = 0;
+    }
+
+    //task is not correct - pointerOnLastElement is zero may be in case when array contains one element with index 0
+    // so, i add condition - element with index 0 must be null
+    public boolean isEmpty() {
+        return ((pointerOnLastElement == 0) && (dataArray[0] == null));
+    }
+
+    /**
+     * trim array to amount of not-null elements
+     */
+    public void trimToSize() {
+        dataArray = new Object[pointerOnLastElement + 1];
+        capacity = dataArray.length;
+    }
+
+    /**
+     * search item in array from 0-index to last index
+     *
+     * @param item - item for searching
+     * @return in successful searching return index of item, in other case return -1
+     */
+    public int indexOf(Object item) {
+        for (int i = 0; i < pointerOnLastElement; i++) {
+            if (dataArray[i].equals(item)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    /**
+     * search item in array from last index to 0-index
+     *
+     * @param item - item for searching
+     * @return in successful searching return index of item, in other case return -1
+     */
+    public int lastIndexOf(Object item) {
+        for (int i = pointerOnLastElement; i <= 0; i--) {
+            if (dataArray[i].equals(item)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+    public boolean isItemPresent(T item) {
+        return Stream.of(dataArray)
+                .filter(v -> v != null)
+                .anyMatch(v -> (v.equals(item)));
+    }
+
+    public int indexOfItem(T item) {
+        OptionalInt result = OptionalInt.of(-1);
+            result =
+                    IntStream
+                            .range(0, dataArray.length)
+                            .filter(i -> dataArray[i].equals(item))
+                            .findFirst();
+        return result.orElse(-1);
+    }
+
+
+    //task 5
+
+    /**
+     * revers array
+     */
+    public void reverse(){
+//        for (int i = 0; i <= ((pointerOnLastElement+1)/2); i++) {
+        Object tmpItem;
+        for (int i = 0; i < (pointerOnLastElement/2); i++) {
+            tmpItem = dataArray[i];
+            dataArray[i] = dataArray[pointerOnLastElement-i];
+            dataArray[pointerOnLastElement-i] = tmpItem;
+        }
+    }
+
+    /**
+     * revers array using stream
+     */
+    public void reverseByStream(){
+        Collections.reverse(Arrays.asList(dataArray));
+    }
+
+
+    public void shuffle(){
+
     }
 
     public void set(int idx, T item) {
@@ -262,8 +372,8 @@ public class MyArrayList<T> {
     }
 
 
-    public void show(String oper) {
-        System.out.println("***** " + oper + " ****");
+    public void show() {
+        System.out.println("*********");
         for (Object i : dataArray) {
             System.out.println(i);
         }
@@ -283,25 +393,6 @@ public class MyArrayList<T> {
 
     public T getItem(int idx) {
         return (T) dataArray[idx];
-    }
-
-    public boolean isValuePresent(T topic) {
-        return Stream.of(dataArray)
-                .filter(v -> v != null)
-                .anyMatch(v -> (v.equals(topic)));
-    }
-
-    public int getIndexOfVal(T topic) {
-        OptionalInt result = OptionalInt.of(-1);
-        if (isValuePresent(topic)) {
-            result =
-                    IntStream
-                            .range(0, dataArray.length)
-                            .filter(i -> dataArray[i].equals(topic))
-                            .findFirst();
-        }
-//        return result.getAsInt();
-        return result.orElse(-1);
     }
 
 
