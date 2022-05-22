@@ -2,20 +2,14 @@ package org.dng;
 
 
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.OptionalInt;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- * Мои файлы
- * Step Шамбала
- * JAVA113
- * Язык программирования Java
- * ДЗ
- * 1 Домашнее задание No 7.4Курс:«Язык программирования Java» ТЕМА: GENERICS
+ *
+ * Домашнее задание No 7.4
+ * Курс:«Язык программирования Java» ТЕМА: GENERICS
  * Написать класс-контейнер, реализующий логику работы одномерного безразмерного динамического массива.
  * Имя класса MyArrayList.
  * Структура данных – массив. Типы хранимых данных – объекты любых классов (исполь-зовать шаблонное программирование).
@@ -76,22 +70,21 @@ import java.util.stream.Stream;
  */
 public class MyArrayList<T> {
     private final int INIT_SIZE = 10;
-    private final int RESIZE_QUANTITY = 2;
-    private final int CONDITION4CUT = 2;
+//    private final int RESIZE_QUANTITY = 2;
+//    private final int CONDITION4CUT = 2;
     private int pointerOnLastElement = 0; //pointerOnLastElement
-    private int capacity = INIT_SIZE; //current size of array
-    //    private Object[] dataArray = new Object[INIT_SIZE];
+    private int capacity; //current size of array
     private Object[] dataArray;
 
     //**** Constructors ****
     public MyArrayList() {
         dataArray = new Object[INIT_SIZE];
-        capacity = dataArray.length;
+        capacity = INIT_SIZE;
     }
 
     public MyArrayList(int capacity) {
         dataArray = new Object[capacity];
-        capacity = dataArray.length;
+        this.capacity = capacity;
     }
     //**********************
 
@@ -100,11 +93,19 @@ public class MyArrayList<T> {
         return pointerOnLastElement + 1;
     }
 
+    public int getCapacity() {
+        return capacity;
+    }
+    //**************************
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Object o : dataArray) {
-            sb.append(o.toString() + " ");
+            if(o != null)
+//                sb.append(o.toString() + " ");
+                sb.append(o + " ");
         }
         return sb.toString();
     }
@@ -163,8 +164,8 @@ public class MyArrayList<T> {
      * insert item to array at index idx
      * return true if success or false if idx is in out of bounds of array
      *
-     * @param item
-     * @param idx
+     * @param item - item for inserting
+     * @param idx - place, where to insert
      */
     public boolean insert(T item, int idx) {
         boolean success = false;
@@ -180,7 +181,7 @@ public class MyArrayList<T> {
                 success = true;
             }
         } else if (idx <= pointerOnLastElement) {
-            System.arraycopy(dataArray, idx + 1, dataArray, idx + 1, pointerOnLastElement + 1 - idx);
+            System.arraycopy(dataArray, idx + 0, dataArray, idx + 1, pointerOnLastElement + 1 - idx);
             dataArray[idx] = item;
             pointerOnLastElement++;
             success = true;
@@ -240,7 +241,7 @@ public class MyArrayList<T> {
      * remove from array element which is equal to item
      * and return true if array contains value or false in other case
      *
-     * @param item
+     * @param item - item, which wil be removed
      */
     public boolean remove(T item) {
         boolean success = false;
@@ -256,7 +257,7 @@ public class MyArrayList<T> {
      * remove from array all elements which are equal to item
      * and return true if array contains value or false in other case
      *
-     * @param item
+     * @param item - item, which will be removed
      */
     public boolean removeAll(T item) {
         boolean success = false;
@@ -270,6 +271,9 @@ public class MyArrayList<T> {
     }
 
 
+    /**
+     * clear the array
+     */
     public void clear() {
         dataArray = new Object[capacity];
         pointerOnLastElement = 0;
@@ -320,14 +324,15 @@ public class MyArrayList<T> {
     }
 
 
-    public boolean isItemPresent(T item) {
+    public boolean isItemPresentByStream(T item) {
         return Stream.of(dataArray)
-                .filter(v -> v != null)
+//                .filter(v -> v != null)
+                .filter(Objects::nonNull)
                 .anyMatch(v -> (v.equals(item)));
     }
 
-    public int indexOfItem(T item) {
-        OptionalInt result = OptionalInt.of(-1);
+    public int indexOfItemByStream(T item) {
+        OptionalInt result;
         result =
                 IntStream
                         .range(0, dataArray.length)
@@ -360,6 +365,9 @@ public class MyArrayList<T> {
     }
 
 
+    /**
+     * shuffles the array
+     */
     public void shuffle() {
         Random rand = new Random();
 
@@ -383,9 +391,8 @@ public class MyArrayList<T> {
         if (this == o) return true;
         if (!(o instanceof MyArrayList)) return false;
         MyArrayList<?> that = (MyArrayList<?>) o;
-        return INIT_SIZE == that.INIT_SIZE &&
+        return capacity == that.capacity &&
                 pointerOnLastElement == that.pointerOnLastElement &&
-                capacity == that.capacity &&
                 Arrays.equals(dataArray, that.dataArray);
     }
 
@@ -415,7 +422,10 @@ public class MyArrayList<T> {
     }
 
 
-
+    /**
+     * clones the current instance of MyArrayList (objects in an array are not cloned)
+     * @return clone
+     */
     protected Object clone()  {
         MyArrayList clone = new MyArrayList(this.capacity);
         for (int i = 0; i < pointerOnLastElement; i++) {
@@ -436,6 +446,9 @@ public class MyArrayList<T> {
     }
 
 
+    /**
+     * print current array
+     */
     public void show() {
         System.out.println("*********");
         System.out.println("array contains objects:");
@@ -449,15 +462,12 @@ public class MyArrayList<T> {
 
     //we will send a copy of the array outside, not the array itself -
     // in order not to violate the principle of Encapsulation and "Open Closed Principle"  ))
-    public Object[] getDataArrayArray() {
+    public Object[] getDataArrayCopy() {
         Object[] newArray = new Object[dataArray.length];
         System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
         return newArray;
     }
 
-    public int getArrLenght() {
-        return dataArray.length;
-    }
 
 
 }
