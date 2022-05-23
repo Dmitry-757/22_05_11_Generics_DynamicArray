@@ -7,7 +7,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /**
- *
  * Домашнее задание No 7.4
  * Курс:«Язык программирования Java» ТЕМА: GENERICS
  * Написать класс-контейнер, реализующий логику работы одномерного безразмерного динамического массива.
@@ -70,7 +69,7 @@ import java.util.stream.Stream;
  */
 public class MyArrayList<T> {
     private final int INIT_SIZE = 10;
-//    private final int RESIZE_QUANTITY = 2;
+    //    private final int RESIZE_QUANTITY = 2;
 //    private final int CONDITION4CUT = 2;
     private int pointerOnLastElement = 0; //pointerOnLastElement
     private int capacity; //current size of array
@@ -103,7 +102,7 @@ public class MyArrayList<T> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Object o : dataArray) {
-            if(o != null)
+            if (o != null)
 //                sb.append(o.toString() + " ");
                 sb.append(o + " ");
         }
@@ -165,7 +164,7 @@ public class MyArrayList<T> {
      * return true if success or false if idx is in out of bounds of array
      *
      * @param item - item for inserting
-     * @param idx - place, where to insert
+     * @param idx  - place, where to insert
      */
     public boolean insert(T item, int idx) {
         boolean success = false;
@@ -260,15 +259,13 @@ public class MyArrayList<T> {
      *
      * @param item - item, which will be removed
      */
-    public boolean removeAll(T item) {
-        boolean success = false;
-        for (int i = 0; i < pointerOnLastElement; i++) {
-            if (dataArray[i].equals(item)) {
-                removeAt(i);
-                success = true;
-            }
-        }
-        return success;
+    public void removeAll(T item) {
+
+        Object[] newArray = new Object[dataArray.length];
+        dataArray = Arrays.stream(dataArray).filter(o-> ((o != null)&&!o.equals(item)) ).toArray();
+        System.arraycopy(dataArray,0, newArray, 0, dataArray.length);
+        pointerOnLastElement = dataArray.length - 1;
+        dataArray = newArray;
     }
 
 
@@ -399,6 +396,7 @@ public class MyArrayList<T> {
 
     /**
      * search item at index idx in array, serialize them, deserialize to new object
+     *
      * @param idx
      * @return return copy of element of array with index idx or null if idx out of bounds
      */
@@ -415,7 +413,7 @@ public class MyArrayList<T> {
             //deserialize
             ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
             ObjectInputStream ois = new ObjectInputStream(bis);
-            T clone = (T)ois.readObject();
+            T clone = (T) ois.readObject();
             return clone;
 
         } else
@@ -425,9 +423,10 @@ public class MyArrayList<T> {
 
     /**
      * clones the current instance of MyArrayList (objects in an array are not cloned)
+     *
      * @return clone
      */
-    protected Object clone()  {
+    protected Object clone() {
         MyArrayList clone = new MyArrayList(this.capacity);
         for (int i = 0; i < pointerOnLastElement; i++) {
             clone.pushBack(dataArray[i]);
@@ -437,7 +436,8 @@ public class MyArrayList<T> {
 
     /**
      * set element with index idx value as item
-     * @param idx - index of element
+     *
+     * @param idx  - index of element
      * @param item - item is putting to array
      */
     public void setAt(int idx, T item) {
@@ -455,7 +455,7 @@ public class MyArrayList<T> {
         System.out.println("array contains objects:");
         System.out.println("[ ");
         for (Object i : dataArray) {
-            System.out.print(i+" ");
+            System.out.print(i + " ");
         }
         System.out.println("]");
         System.out.println("*********");
@@ -468,7 +468,6 @@ public class MyArrayList<T> {
         System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
         return newArray;
     }
-
 
 
 }

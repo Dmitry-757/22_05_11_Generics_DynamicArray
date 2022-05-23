@@ -330,10 +330,91 @@ class MyArrayListTest {
 
     @Test
     void remove() {
+        /**
+         *  original dataArray is:[0 1 2 3 4 null null null]
+         *  original capacity = 8
+         *  original pointerOnLastElement = 4
+         * equality defined as:
+         * return capacity == that.capacity &&
+         *       pointerOnLastElement == that.pointerOnLastElement &&
+         *       Arrays.equals(dataArray, that.dataArray);
+         * so, needed to compare capacity, pointerOnLastElement and dataArray
+         */
+        myArrayList.pushBack(3);
+        // now original dataArray is:[0 1 2 3 4 3 null null]
+        myArrayList.remove(3);
+        // now original dataArray is:[0 1 2 4 3 null null null]
+
+        MyArrayList<Integer> expected = new MyArrayList<>(myArrayList.getCapacity());
+        Object[] arr = new Object[myArrayList.getCapacity()];
+        try {
+            Field fieldDataArray = expected.getClass().getDeclaredField("dataArray");
+            fieldDataArray.setAccessible(true);
+            arr[0] = 0;
+            arr[1] = 1;
+            arr[2] = 2;
+            arr[3] = 4;
+            arr[4] = 3;
+
+            fieldDataArray.set(expected, arr);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Field fieldPointerOnLastElement = expected.getClass().getDeclaredField("pointerOnLastElement");
+            fieldPointerOnLastElement.setAccessible(true);
+            fieldPointerOnLastElement.set(expected, 4);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(expected, myArrayList);
     }
 
     @Test
     void removeAll() {
+        /**
+         *  original dataArray is:[0 1 2 3 4 null null null]
+         *  original capacity = 8
+         *  original pointerOnLastElement = 4
+         * equality defined as:
+         * return capacity == that.capacity &&
+         *       pointerOnLastElement == that.pointerOnLastElement &&
+         *       Arrays.equals(dataArray, that.dataArray);
+         * so, needed to compare capacity, pointerOnLastElement and dataArray
+         */
+        myArrayList.pushBack(3);
+        // now original dataArray is:[0 1 2 3 4 3 null null]
+        myArrayList.removeAll(3);
+        // now original dataArray is:[0 1 2 4 null null null null]
+
+        MyArrayList<Integer> expected = new MyArrayList<>(myArrayList.getCapacity());
+        Object[] arr = new Object[myArrayList.getCapacity()];
+        try {
+            Field fieldDataArray = expected.getClass().getDeclaredField("dataArray");
+            fieldDataArray.setAccessible(true);
+            arr[0] = 0;
+            arr[1] = 1;
+            arr[2] = 2;
+            arr[3] = 4;
+
+            fieldDataArray.set(expected, arr);
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            Field fieldPointerOnLastElement = expected.getClass().getDeclaredField("pointerOnLastElement");
+            fieldPointerOnLastElement.setAccessible(true);
+            fieldPointerOnLastElement.set(expected, 3);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(expected, myArrayList);
     }
 
     @Test
