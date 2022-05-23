@@ -218,11 +218,12 @@ public class MyArrayList<T> {
             pointerOnLastElement--;
             success = true;
         } else if (idx == pointerOnLastElement) {
-            dataArray[idx] = null;
+            dataArray[pointerOnLastElement] = null;
             pointerOnLastElement--;
             success = true;
         } else if ((idx > 0) && (idx <= pointerOnLastElement)) {
             System.arraycopy(dataArray, idx + 1, dataArray, idx + 0, pointerOnLastElement - idx);
+            dataArray[pointerOnLastElement] = null;
             pointerOnLastElement--;
             success = true;
         }
