@@ -69,7 +69,7 @@ import java.util.stream.Stream;
  */
 public class MyArrayList<T> {
     private final int INIT_SIZE = 10;
-    //    private final int RESIZE_QUANTITY = 2;
+//    private final int RESIZE_QUANTITY = 2;
 //    private final int CONDITION4CUT = 2;
     private int pointerOnLastElement = 0; //pointerOnLastElement
     private int capacity; //current size of array
