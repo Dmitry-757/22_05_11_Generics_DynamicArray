@@ -138,18 +138,11 @@ public class MyArrayList<T> {
      * @param item - item for adding
      */
     public void pushBack(T item) {
-//        ensureCapacity(pointerOnLastElement + 1 + 1);//current size = pointerOnLastElement+1 and need one place for new item
-//        if (pointerOnLastElement == 0 )
-//            dataArray[pointerOnLastElement + 1] = item;
-//        else
-//            dataArray[pointerOnLastElement + 1] = item;
-//
-//        pointerOnLastElement++;
+        //ensureCapacity present in method insert()
         if ((pointerOnLastElement == 0) && (dataArray[0] == null))
             insert(item, 0);
         else
             insert(item, pointerOnLastElement + 1);
-//            dataArray[pointerOnLastElement + 1] = item;
 
     }
 
@@ -161,6 +154,7 @@ public class MyArrayList<T> {
     public void pushFront(T item) {
         insert(item, 0);
     }
+
 
     /**
      * insert item to array at index idx
