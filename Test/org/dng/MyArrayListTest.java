@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -479,25 +480,31 @@ class MyArrayListTest {
 
     @Test
     void reverse() {
+        //original dataArray is:[0 1 2 3 4 null null null]
+        myArrayList.reverse();
+        assertEquals("4 3 2 1 0 ", myArrayList.toString());
     }
 
-    @Test
-    void reverseByStream() {
-    }
 
     @Test
-    void shuffle() {
+    void getElementAt() {
+        //original dataArray is:[0 1 2 3 4 null null null]
+        try {
+            assertEquals(0, myArrayList.getElementAt(0));
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     void testEquals() {
     }
 
-    @Test
-    void getElementAt() {
-    }
 
     @Test
     void testClone() {
     }
+
 }
