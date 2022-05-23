@@ -89,7 +89,10 @@ public class MyArrayList<T> {
 
     //*** Getters **********
     public int getSize() {
-        return pointerOnLastElement + 1;
+        if ((pointerOnLastElement == 0) && (dataArray[pointerOnLastElement] == null))
+            return 0;
+        else
+            return pointerOnLastElement + 1;
     }
 
     public int getCapacity() {
@@ -262,8 +265,8 @@ public class MyArrayList<T> {
     public void removeAll(T item) {
 
         Object[] newArray = new Object[dataArray.length];
-        dataArray = Arrays.stream(dataArray).filter(o-> ((o != null)&&!o.equals(item)) ).toArray();
-        System.arraycopy(dataArray,0, newArray, 0, dataArray.length);
+        dataArray = Arrays.stream(dataArray).filter(o -> ((o != null) && !o.equals(item))).toArray();
+        System.arraycopy(dataArray, 0, newArray, 0, dataArray.length);
         pointerOnLastElement = dataArray.length - 1;
         dataArray = newArray;
     }
@@ -298,7 +301,7 @@ public class MyArrayList<T> {
      * @return in successful searching return index of item, in other case return -1
      */
     public int indexOf(Object item) {
-        for (int i = 0; i < pointerOnLastElement; i++) {
+        for (int i = 0; i <= pointerOnLastElement; i++) {
             if (dataArray[i].equals(item)) {
                 return i;
             }
@@ -313,8 +316,8 @@ public class MyArrayList<T> {
      * @return in successful searching return index of item, in other case return -1
      */
     public int lastIndexOf(Object item) {
-        for (int i = pointerOnLastElement; i <= 0; i--) {
-            if (dataArray[i].equals(item)) {
+        for (int i = pointerOnLastElement; 0 <= i; i--) {
+            if ((dataArray[i] != null) && (dataArray[i].equals(item))) {
                 return i;
             }
         }

@@ -419,22 +419,62 @@ class MyArrayListTest {
 
     @Test
     void clear() {
+        myArrayList.clear();
+
+        assertEquals(0, myArrayList.getSize());
+        boolean existsNotNullItems = true;
+        try {
+            Field fieldDataArray = myArrayList.getClass().getDeclaredField("dataArray");
+            fieldDataArray.setAccessible(true);
+
+            boolean allItemsAreNull = true;
+            Object[] dataArray = (Object[]) fieldDataArray.get(myArrayList);
+            for (Object o:dataArray) {
+                if(o!=null) {
+                    allItemsAreNull = false;
+                    break;
+                }
+            }
+            existsNotNullItems = !allItemsAreNull;
+
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        assertEquals(false, existsNotNullItems);
+
+
+
     }
 
     @Test
     void isEmpty() {
+        myArrayList.clear();
+
+        assertEquals(true, myArrayList.isEmpty());
+
     }
 
     @Test
     void trimToSize() {
+        myArrayList.trimToSize();
+        assertEquals(5, myArrayList.getCapacity());
+        assertEquals(myArrayList.getSize(), myArrayList.getCapacity());
     }
 
     @Test
     void indexOf() {
+        //original dataArray is:[0 1 2 3 4 null null null]
+        myArrayList.pushBack(3);
+        //original dataArray is:[0 1 2 3 4 3 null null]
+        assertEquals(3, myArrayList.indexOf(3));
     }
 
     @Test
     void lastIndexOf() {
+        //original dataArray is:[0 1 2 3 4 null null null]
+        myArrayList.pushBack(3);
+        //original dataArray is:[0 1 2 3 4 3 null null]
+        assertEquals(5, myArrayList.lastIndexOf(3));
     }
 
     @Test
