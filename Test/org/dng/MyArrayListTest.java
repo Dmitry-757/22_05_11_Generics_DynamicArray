@@ -2,6 +2,7 @@ package org.dng;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -13,10 +14,10 @@ class MyArrayListTest {
 
 
     private static MyArrayList<Integer> myArrayList;
-    private static MyArrayList<Integer> expectedArr;
 
-    @BeforeAll
-    static void setUp() {
+    //@BeforeAll
+    @BeforeEach
+    void setUp() {
         myArrayList = new MyArrayList<>(8);
         myArrayList.pushBack(0);
         myArrayList.pushBack(1);
