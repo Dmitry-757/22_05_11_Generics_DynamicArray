@@ -503,7 +503,33 @@ class MyArrayListTest {
         /**
          equals (в качестве параметра передается ссылка на другой объект класса MyArrayList.
          Метод сравнивает массивы не только по количеству элементов, но и по их содержимому);
+         original dataArray is:[0 1 2 3 4 null null null]
          */
+
+        //lets compare equal arrays
+        MyArrayList<Integer>  myArrayList2 = new MyArrayList<>(8);
+        myArrayList2.pushBack(0);
+        myArrayList2.pushBack(1);
+        myArrayList2.pushBack(2);
+        myArrayList2.pushBack(3);
+        myArrayList2.pushBack(4);
+
+        assertEquals(true, myArrayList.equals(myArrayList2));
+
+        //lets make myArrayList2 not equal to myArrayList (add extra element)
+        myArrayList2.pushBack(4);
+        assertNotEquals(true, myArrayList.equals(myArrayList2));
+
+        //lets make myArrayList2 not equal to myArrayList (change one of elements)
+        myArrayList2 = new MyArrayList<>(8);
+        myArrayList2.pushBack(0);
+        myArrayList2.pushBack(1);
+        myArrayList2.pushBack(2);
+        myArrayList2.pushBack(3);
+        myArrayList2.pushBack(5);
+
+        assertNotEquals(true, myArrayList.equals(myArrayList2));
+
     }
 
 
