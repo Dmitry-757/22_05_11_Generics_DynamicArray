@@ -1,7 +1,6 @@
 package org.dng;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -197,15 +196,6 @@ class MyArrayListTest {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
-//        try {
-//            Field fieldCapacity = expected.getClass().getDeclaredField("capacity");
-//            fieldCapacity.setAccessible(true);
-//            fieldCapacity.set(expected, 8);
-//        } catch (NoSuchFieldException | IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
-
         assertEquals(expected, myArrayList);
     }
 
@@ -442,7 +432,7 @@ class MyArrayListTest {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
-        assertEquals(false, existsNotNullItems);
+        assertFalse(existsNotNullItems);
 
 
 
@@ -452,7 +442,7 @@ class MyArrayListTest {
     void isEmpty() {
         myArrayList.clear();
 
-        assertEquals(true, myArrayList.isEmpty());
+        assertTrue(myArrayList.isEmpty());
 
     }
 
@@ -515,7 +505,7 @@ class MyArrayListTest {
         myArrayList2.pushBack(3);
         myArrayList2.pushBack(4);
 
-        assertEquals(true, myArrayList.equals(myArrayList2));
+        assertTrue(myArrayList.equals(myArrayList2));
 
         //lets make myArrayList2 not equal to myArrayList (add extra element)
         myArrayList2.pushBack(4);
@@ -540,7 +530,7 @@ class MyArrayListTest {
          переопределить метод clone – метод создает точную копию MyArrayList и возвращает ссылку на эту копию (неглубокое копирование).
          */
         MyArrayList clone = myArrayList.clone();
-        assertEquals(true, myArrayList.equals(clone));
+        assertEquals(myArrayList, clone);
     }
 
 }
