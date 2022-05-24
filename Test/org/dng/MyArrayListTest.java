@@ -538,6 +538,8 @@ class MyArrayListTest {
         /**
          переопределить метод clone – метод создает точную копию MyArrayList и возвращает ссылку на эту копию (неглубокое копирование).
          */
+        MyArrayList clone = myArrayList.clone();
+        assertEquals(true, myArrayList.equals(clone));
     }
 
 }

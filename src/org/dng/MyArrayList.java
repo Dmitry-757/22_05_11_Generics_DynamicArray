@@ -423,9 +423,9 @@ public class MyArrayList<T> {
      *
      * @return clone
      */
-    protected Object clone() {
+    protected MyArrayList clone() {
         MyArrayList clone = new MyArrayList(this.capacity);
-        for (int i = 0; i < pointerOnLastElement; i++) {
+        for (int i = 0; i <= pointerOnLastElement; i++) {
             clone.pushBack(dataArray[i]);
         }
         return clone;
